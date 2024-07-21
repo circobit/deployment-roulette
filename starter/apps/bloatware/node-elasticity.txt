@@ -1,0 +1,27 @@
+╰─ kubectl get pods -n udacity
+NAME                                  READY   STATUS    RESTARTS   AGE
+bloaty-mcbloatface-7bbb87f5d9-5dfn6   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-6pd6w   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-8rbjg   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-8zvqk   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-9g6zb   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-bz4w4   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-d4rz4   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-dksbg   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-fr54n   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-hqgbn   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-j9kfh   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-kzftc   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-l5tqc   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-mqjlf   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-sbtmn   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-sjl69   1/1     Running   0          4m44s
+bloaty-mcbloatface-7bbb87f5d9-t54hf   1/1     Running   0          4m44s
+blue-cc47b5586-cqm8q                  1/1     Running   0          83m
+blue-cc47b5586-qxbn2                  1/1     Running   0          83m
+blue-cc47b5586-wp7tc                  1/1     Running   0          83m
+canary-v1-7bb5f78b95-7gmcw            1/1     Running   0          83m
+canary-v1-7bb5f78b95-v5q2v            1/1     Running   0          83m
+canary-v2-557b4c87c9-ckplk            1/1     Running   0          76m
+canary-v2-557b4c87c9-k4s79            1/1     Running   0          75m
+hello-world-5f96f5fbd9-2pqc9          1/1     Running   0          83m
