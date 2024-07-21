@@ -92,6 +92,15 @@ data "aws_iam_policy_document" "k8s_auto_scaling" {
       "*"
     ]
   }
+  statement {
+    actions = [
+      "sts:AssumeRoleWithWebIdentity"
+    ]
+
+    resources = [
+      "*"
+    ]
+  }
 }
 
 resource "aws_iam_policy" "k8s_auto_scaling" {
