@@ -115,7 +115,7 @@ This is the list of the pods within the `udacity` namespace:
 
 ### Resolution Notes and Screenshots:
 
-The script `blue-green.sh` is performing the blue-green deployment successfully:
+The script `starter/apps/blue-green/blue-green.sh` is performing the blue-green deployment successfully:
 
 ![6-blue-green-script](screenshots/6-blue-green-script.png)
 
