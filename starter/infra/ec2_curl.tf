@@ -24,10 +24,10 @@ resource "aws_security_group" "ssh_access" {
       ipv6_cidr_blocks = ["::/0"]
 
       description     = ""
-      from_port       = 80
-      to_port         = 80
+      from_port       = 0
+      to_port         = 0
       prefix_list_ids = []
-      protocol        = "tcp"
+      protocol        = "-1"
       security_groups = []
       self            = false
     },
@@ -48,4 +48,5 @@ module "ec2_instance" {
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.ssh_access.id]
   subnet_id              = module.vpc.public_subnet_ids[0]
+  key_name               = var.private_key
 }

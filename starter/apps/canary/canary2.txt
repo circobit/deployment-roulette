@@ -1,0 +1,10 @@
+╰─ kubectl get pods -n udacity
+NAME                           READY   STATUS    RESTARTS   AGE
+blue-cc47b5586-5sh26           1/1     Running   0          151m
+blue-cc47b5586-9xrfh           1/1     Running   0          151m
+blue-cc47b5586-s4hpl           1/1     Running   0          151m
+canary-v1-7bb5f78b95-8gbjf     1/1     Running   0          4m2s
+canary-v1-7bb5f78b95-d7sjt     1/1     Running   0          4m2s
+canary-v2-557b4c87c9-bbw4q     1/1     Running   0          3m20s
+canary-v2-557b4c87c9-tnbwn     1/1     Running   0          3m30s
+hello-world-5f96f5fbd9-rwphk   1/1     Running   0          151m

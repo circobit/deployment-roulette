@@ -1,0 +1,22 @@
+# By default, only the cluster creator has access to resources within a cluster, while other users and 
+# roles do not. To grant cluster permissions to other users or roles in EKS, you need to use a 
+# configmap called aws-auth located in the kube-system namespace. To provide permissions to 
+# additional roles, define mapRoles in this configmap. Similarly, to grant permissions to other 
+# users, define mapUsers.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::607531995438:role/app-udacity-eks-node-role
+      username: system:node:{{EC2PrivateDNSName}}
+      groups:
+        - system:bootstrappers
+        - system:nodes
+    - rolearn: arn:aws:iam::607531995438:role/udacity-github-actions
+      username: system:admin
+      groups:
+        - system:masters

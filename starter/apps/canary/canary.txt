@@ -1,0 +1,40 @@
+[ec2-user@ip-10-100-10-70 ~]$ curl a64c9b1d07b4d48c6a092cced24d2d0e-1300615619.us-east-2.elb.amazonaws.com
+<html>
+<h1>This is version 2</h1>
+</html>
+[ec2-user@ip-10-100-10-70 ~]$ curl a64c9b1d07b4d48c6a092cced24d2d0e-1300615619.us-east-2.elb.amazonaws.com
+<html>
+<h1>This is version 2</h1>
+</html>
+[ec2-user@ip-10-100-10-70 ~]$ curl a64c9b1d07b4d48c6a092cced24d2d0e-1300615619.us-east-2.elb.amazonaws.com
+<html>
+<h1>This is version 1</h1>
+</html>
+[ec2-user@ip-10-100-10-70 ~]$ curl a64c9b1d07b4d48c6a092cced24d2d0e-1300615619.us-east-2.elb.amazonaws.com
+<html>
+<h1>This is version 1</h1>
+</html>
+[ec2-user@ip-10-100-10-70 ~]$ curl a64c9b1d07b4d48c6a092cced24d2d0e-1300615619.us-east-2.elb.amazonaws.com
+<html>
+<h1>This is version 1</h1>
+</html>
+[ec2-user@ip-10-100-10-70 ~]$ curl a64c9b1d07b4d48c6a092cced24d2d0e-1300615619.us-east-2.elb.amazonaws.com
+<html>
+<h1>This is version 2</h1>
+</html>
+[ec2-user@ip-10-100-10-70 ~]$ curl a64c9b1d07b4d48c6a092cced24d2d0e-1300615619.us-east-2.elb.amazonaws.com
+<html>
+<h1>This is version 2</h1>
+</html>
+[ec2-user@ip-10-100-10-70 ~]$ curl a64c9b1d07b4d48c6a092cced24d2d0e-1300615619.us-east-2.elb.amazonaws.com
+<html>
+<h1>This is version 2</h1>
+</html>
+[ec2-user@ip-10-100-10-70 ~]$ curl a64c9b1d07b4d48c6a092cced24d2d0e-1300615619.us-east-2.elb.amazonaws.com
+<html>
+<h1>This is version 1</h1>
+</html>
+[ec2-user@ip-10-100-10-70 ~]$ curl a64c9b1d07b4d48c6a092cced24d2d0e-1300615619.us-east-2.elb.amazonaws.com
+<html>
+<h1>This is version 1</h1>
+</html>
