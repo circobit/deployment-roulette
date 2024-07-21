@@ -1,5 +1,12 @@
 # Deployment Roulette
 
+Deployment Roulette is a project within the Site Reliability Engineer nanodegree from Udacity. This project aims to apply the concepts learned in the "Self-Healing Architectures" course.
+
+Below you will find:
+
+- Dependencies and Installation: Descriptions of dependencies and detailed installation steps to set up the environment.
+- Project Tasks: A list of tasks along with screenshots and further details as proof of their resolution.
+
 ## Getting Started
 
 ### Dependencies
@@ -56,12 +63,39 @@ The AWS environment will be built in the `us-east-2` region of AWS
         - Assess, identify and resolve the problem with the deployment
         - Document your findings via screenshots or text files.
 
+### Resolution Notes and Screenshots:
+
+The pod was failing because the application located at `starter/apps/hello-world/hello.yml` had the path of the
+livenessProbe set to `/nginx_status` instead of `/healthz`. Here is the error:
+
+![1-hello-world-error](screenshots/1-hello-world-error.png)
+
+In the following screenshot is shown the application hello-world up and running with its corresponding
+health checks showing a 200 response:
+
+![2-hello-world-fix](screenshots/2-hello-world-fix.png)
+
 2. *[Canary deployments]*
     1. Create a shell script `canary.sh` that will be executed by GitHub actions.
     2. Canary deploy `/apps/canary-v2` so they take up 50% of the client requests
     3. Curl the service 10 times and save the results to `canary.txt`
         - Ensure that it is able to return results for both services
     4. Provide the output of `kubectl get pods --all-namespaces` to show deployed services
+
+### Resolution Notes and Screenshots:
+
+The canary deployment has been implemented successfully, reaching the required 50% of the entire deployment:
+
+![3-github-actions-canary-deployment](screenshots/3-github-actions-canary-deployment.png)
+
+Here it is possible to observe that running a curl on the service `canary-svc` is showing that the traffic
+is properly balanced as required (50%):
+
+![4-curl-canary-svc](screenshots/4-curl-canary-svc.png)
+
+This is the list of the pods within the `udacity` namespace:
+
+![5-get-pods](screenshots/5-get-pods.png)
 
 3. *[Blue-green deployments]*
 
@@ -79,6 +113,21 @@ The AWS environment will be built in the `us-east-2` region of AWS
         - curl `blue-green.udacityproject` and take a screenshot of the results named `green-only.png` from the `curl`
           ec2 instance
 
+### Resolution Notes and Screenshots:
+
+The script `blue-green.sh` is performing the blue-green deployment successfully:
+
+![6-blue-green-script](screenshots/6-blue-green-script.png)
+
+The blue-green deployment is returning responses from both services when running a curl against
+    `blue-green.udacityproject.com`:
+
+![7-green-blue](screenshots/7-green-blue.png)
+
+Once the DNS record for the blue service is deleted, we get responses just from the green service:
+
+![8-green-only](screenshots/8-green-only.png)
+
 4. *[Node elasticity]*
 
    A microservice `bloaty-mcface` must be deployed for compliance reasons before the company can continue business.
@@ -88,6 +137,27 @@ The AWS environment will be built in the `us-east-2` region of AWS
         1. Take a screenshot of the reason why the deployment was not successful
         2. Provide code or Take a screenshot of the resolution step
     3. Provide the output of `kubectl get pods --all-namespaces` to show deployed services
+
+### Resolution Notes and Screenshots:
+
+Several pods were not deployed properly because there were no nodes available due to lack of CPU:
+    
+![9-pod-failing-node-scaling-issue](screenshots/9-pod-failing-node-scaling-issue.png)
+
+I solved the issue by adding the following elements:
+In `starter/apps/bloatware`:
+    - `configure_autoscaler.sh`: A script that sets up an IAM Open ID connect provider and creates
+       a service account and link it to the IAM policy called `udacity-k8s-autoscale`. The script will 
+       also apply via kubectl the content in `cluster-autoscale.yml`.
+    - `cluster_autoscale.yml`: Roles, bindings and deployment of the `cluster-autoscaler`. It is currently
+      using the image `registry.k8s.io/autoscaling/cluster-autoscaler:v1.30.2`.
+In `starter/infra/modules/eks`:
+    - `iam.tf`: Added permissions to `sts:AssumeRoleWithWebIdentity` in the `k8s_auto_scaling` policy
+       document.
+
+After applying the changes, an extra node is spawn and all the pods properly deployed:
+
+![10-pods-running](screenshots/10-pods-running.png)
 
 5. *[Observability with metrics]*
  
@@ -99,12 +169,30 @@ The AWS environment will be built in the `us-east-2` region of AWS
     2. Delete the service with the most memory usage from the cluster
         - Take a screenshot of the output of the same metrics command to a file called `after.png`
 
+### Resolution Notes and Screenshots:
+
+In `starter/bloatware` there is a file called `metrics-server.yml` that will deploy all the resources related to `metrics-server` in order to see the CPU and Memory consumed by the pods. 
+
+These were the pods before identifying the most consuming one:
+
+![11-before](screenshots/11-before.png)
+
+These were the pods after deleting the most consuming one:
+
+![12-after](screenshots/12-after.png)
+
 6. *[Diagramming the cloud landscape with Bob Ross]*  
    In order to improve the onboarding of future developers. You decide to create an architecture diagram so that they
    don't have to learn the lessons you have learnt the hard way.
     1. Create an architectural diagram that accurately describes the current status of your AWS environment.
         1. Make sure to include your AWS resources like the EKS cluster, load balancers
         2. Visualize one or two deployments and their microservices
+
+### Resolution Notes and Screenshots:
+
+Bellow you will find the architecture diagram with two load balancers as example of two services exposed from EKS:
+
+![13-architecture-diagram](screenshots/13-deployment-roulette-architecture.png)
 
 ## Project Clean Up
 
