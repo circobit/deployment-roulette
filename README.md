@@ -1,212 +1,92 @@
-# Deployment Roulette
+# 🎲 Deployment Roulette
 
-Deployment Roulette is a project within the Site Reliability Engineer nanodegree from Udacity. This project aims to apply the concepts learned in the "Self-Healing Architectures" course.
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
+![EKS](https://img.shields.io/badge/EKS-%23232F3E.svg?style=for-the-badge&logo=amazonaws&logoColor=white)
+![Jira](https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
 
-Below you will find:
+> 🧠 This project was originally created as part of the [Site Reliability Engineer Nanodegree](https://www.udacity.com/course/site-reliability-engineer-nanodegree--nd1331) by Udacity.
 
-- Dependencies and Installation: Descriptions of dependencies and detailed installation steps to set up the environment.
-- Project Tasks: A list of tasks along with screenshots and further details as proof of their resolution.
+## 📖 Overview
 
-## Getting Started
+**Deployment Roulette** is an experimental project that explores automated deployment strategies and CI/CD integrations using GitHub Actions. It demonstrates:
 
-### Dependencies
+- 🟢 **Canary deployments** to AWS EKS clusters
+- 📝 **JIRA automation**: auto-creating tickets from pull requests
 
-- Udacity AWS Gateway
+This project uses GitHub Actions to orchestrate selective deployments and cross-platform issue management as part of a modern SRE workflow.
+
+> ⚠️ **Note**: This project focuses on automation workflows and integration logic. Some shell scripts or services may be mocked or intentionally left abstract.
+
+---
+
+## 📦 Dependencies
+
+To run or test these workflows locally, you should have:
+
+- [AWS CLI](https://aws.amazon.com/cli/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
-- [awscli](https://aws.amazon.com/cli/)
 - [eksctl](https://eksctl.io/introduction/#installation)
-- [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started)
-- [helm](https://www.eksworkshop.com/beginner/060_helm/helm_intro/install/)
+- [terraform](https://developer.hashicorp.com/terraform/downloads)
+- [helm](https://helm.sh/docs/intro/install/)
 
-### Installation
+---
 
-Step by step explanation of how to get a dev environment running.
-----------
-The AWS environment will be built in the `us-east-2` region of AWS
+## 🗂️ Project Structure
 
-1. Set up your AWS credentials from Udacity AWS Gateway locally
-    - `https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html`
+- `.github/workflows/canary-deployment.yml`: triggers canary deploys to EKS
+- `.github/workflows/manual.yml`: auto-creates JIRA tickets from PRs
 
-2. From the AWS console manually create an S3 bucket in `us-east-2` called `udacity-tf-<your_name>`
-   e.g `udacity-tf-emmanuel`
-    - The click `create bucket`
-    - Update `_config.tf` with your S3 bucket name
+---
 
-3. Deploy Terraform infrastructure
-    - `cd starter/infra`
-    - `terraform init`
-    - `terraform apply`
+## 🚀 How It Works
 
-5. Setup Kubernetes config so you can ping the EKS cluster
-    - `aws eks --region us-east-2 update-kubeconfig --name udacity-cluster`
-    - Change Kubernetes context to the new AWS cluster
-        - `kubectl config use-context <cluster_name>`
-            - e.g ` arn:aws:eks:us-east-2:139802095464:cluster/udacity-cluster`
-    - Confirm with: `kubectl get pods --all-namespaces`
-    - Change context to `udacity` namespace
-        - `kubectl config set-context --current --namespace=udacity`
+### 🔁 `canary-deployment.yml`
 
-6. Run K8s initialization script
-    - `./initialize_k8s.sh`
+Triggered by:
+- Opening or reopening a Pull Request
+- Manual invocation from the GitHub Actions tab
 
-7. Done
+Performs:
+1. Configures AWS credentials using GitHub OIDC
+2. Connects to an EKS cluster
+3. Runs a `canary.sh` deployment script (must be defined in `/starter/apps/canary/`)
 
-### Project Tasks
+Use Case: Progressive delivery strategy — a new version is deployed to a subset of pods/users before full rollout.
 
-*NOTE* All AWS infrastructure changes outside of the EKS cluster can be made in the project terraform code
+---
 
-1. *[Deployment Troubleshooting]*
+### 🔧 `manual.yml`
 
-   A previously deployed microservice `hello-world` doesn't seem to be reachable at its public endpoint. The product
-   teams need you to fix this asap!
-    1. The `apps/hello-world` deployment is facing deployment issues.
-        - Assess, identify and resolve the problem with the deployment
-        - Document your findings via screenshots or text files.
+Triggered by:
+- Opening or reopening a Pull Request
+- Manual trigger from Actions tab
 
-### Resolution Notes and Screenshots:
+Performs:
+1. Authenticates to JIRA via secrets
+2. Creates a new issue in the `CONUPDATE` project
+3. Assigns type `Task` and links PR info into the summary
 
-The pod was failing because the application located at `starter/apps/hello-world/hello.yml` had the path of the
-livenessProbe set to `/nginx_status` instead of `/healthz`. Here is the error:
+Use Case: Streamlining workflow between GitHub and JIRA during feature/bug deployments.
 
-![1-hello-world-error](screenshots/1-hello-world-error.png)
+---
 
-In the following screenshot is shown the application hello-world up and running with its corresponding
-health checks showing a 200 response:
+## 🔐 Secrets Required
 
-![2-hello-world-fix](screenshots/2-hello-world-fix.png)
+Set the following GitHub Actions secrets for workflows to succeed:
 
-2. *[Canary deployments]*
-    1. Create a shell script `canary.sh` that will be executed by GitHub actions.
-    2. Canary deploy `/apps/canary-v2` so they take up 50% of the client requests
-    3. Curl the service 10 times and save the results to `canary.txt`
-        - Ensure that it is able to return results for both services
-    4. Provide the output of `kubectl get pods --all-namespaces` to show deployed services
+### AWS for Canary Deployments:
+- `AWS_REGION`
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_SESSION_TOKEN` (if using temporary creds)
 
-### Resolution Notes and Screenshots:
+### JIRA for Issue Creation:
+- `JIRA_BASE_URL`
+- `JIRA_USER_EMAIL`
+- `JIRA_API_TOKEN`
 
-The canary deployment has been implemented successfully, reaching the required 50% of the entire deployment:
+---
 
-![3-github-actions-canary-deployment](screenshots/3-github-actions-canary-deployment.png)
+## 🙌 Author
 
-Here it is possible to observe that running a curl on the service `canary-svc` is showing that the traffic
-is properly balanced as required (50%):
-
-![4-curl-canary-svc](screenshots/4-curl-canary-svc.png)
-
-This is the list of the pods within the `udacity` namespace:
-
-![5-get-pods](screenshots/5-get-pods.png)
-
-3. *[Blue-green deployments]*
-
-   The product teams want a blue-green deployment for the `green` version of the `/apps/blue-green` microservice because
-   they heard it's even safer than canary deployments
-    1. Create a shell script `blue-green.sh` that executes a `green` deployment for the service `apps/blue-green`
-    2. mimic the blue deployment configuration and replace the `index.html` with the values in `green-config` config-map
-    3. The bash script will wait for the new deployment to successfully roll out and the service to be reachable.
-    4. Create a new weighted CNAME record `blue-green.udacityproject` in Route53 for the green environment
-    5. Use the `curl` ec2 instance to curl the `blue-green.udacityproject` url and take a screenshot to document that
-       green & blue services are reachable
-        1. The screenshot should be named `green-blue.png`
-    6. Simulate a failover event to the `green` environment by destroying the blue environment
-    7. Ensure the `blue-green.udacityproject` record now only returns the green environment
-        - curl `blue-green.udacityproject` and take a screenshot of the results named `green-only.png` from the `curl`
-          ec2 instance
-
-### Resolution Notes and Screenshots:
-
-The script `starter/apps/blue-green/blue-green.sh` is performing the blue-green deployment successfully:
-
-![6-blue-green-script](screenshots/6-blue-green-script.png)
-
-The blue-green deployment is returning responses from both services when running a curl against
-    `blue-green.udacityproject.com`:
-
-![7-green-blue](screenshots/7-green-blue.png)
-
-Once the DNS record for the blue service is deleted, we get responses just from the green service:
-
-![8-green-only](screenshots/8-green-only.png)
-
-4. *[Node elasticity]*
-
-   A microservice `bloaty-mcface` must be deployed for compliance reasons before the company can continue business.
-   Ensure it is deployed successfully
-    1. Deploy `apps/bloatware` microservice
-    2. Identify if the application deployment was successful and if not resolve any issues found
-        1. Take a screenshot of the reason why the deployment was not successful
-        2. Provide code or Take a screenshot of the resolution step
-    3. Provide the output of `kubectl get pods --all-namespaces` to show deployed services
-
-### Resolution Notes and Screenshots:
-
-Several pods were not deployed properly because there were no nodes available due to lack of CPU:
-    
-![9-pod-failing-node-scaling-issue](screenshots/9-pod-failing-node-scaling-issue.png)
-
-I solved the issue by adding the following elements:
-In `starter/apps/bloatware`:
-    - `configure_autoscaler.sh`: A script that sets up an IAM Open ID connect provider and creates
-       a service account and link it to the IAM policy called `udacity-k8s-autoscale`. The script will 
-       also apply via kubectl the content in `cluster-autoscale.yml`.
-    - `cluster_autoscale.yml`: Roles, bindings and deployment of the `cluster-autoscaler`. It is currently
-      using the image `registry.k8s.io/autoscaling/cluster-autoscaler:v1.30.2`.
-In `starter/infra/modules/eks`:
-    - `iam.tf`: Added permissions to `sts:AssumeRoleWithWebIdentity` in the `k8s_auto_scaling` policy
-       document.
-
-After applying the changes, an extra node is spawn and all the pods properly deployed:
-
-![10-pods-running](screenshots/10-pods-running.png)
-
-5. *[Observability with metrics]*
- 
-   You have realized there is no observability in the Kubernetes environment. You suspect there is a service
-   unnecessarily consuming too much memory and needs to be removed
-    1. Install a metrics server on the kubernetes cluster and identify the service using up the most memory
-        - Take a screenshot of the output of the metrics command used to a file called `before.png`
-        - Document the name of the application using the most memory in a text file called `high_memory.txt`
-    2. Delete the service with the most memory usage from the cluster
-        - Take a screenshot of the output of the same metrics command to a file called `after.png`
-
-### Resolution Notes and Screenshots:
-
-In `starter/bloatware` there is a file called `metrics-server.yml` that will deploy all the resources related to `metrics-server` in order to see the CPU and Memory consumed by the pods. 
-
-These were the pods before identifying the most consuming one:
-
-![11-before](screenshots/11-before.png)
-
-These were the pods after deleting the most consuming one:
-
-![12-after](screenshots/12-after.png)
-
-6. *[Diagramming the cloud landscape with Bob Ross]*  
-   In order to improve the onboarding of future developers. You decide to create an architecture diagram so that they
-   don't have to learn the lessons you have learnt the hard way.
-    1. Create an architectural diagram that accurately describes the current status of your AWS environment.
-        1. Make sure to include your AWS resources like the EKS cluster, load balancers
-        2. Visualize one or two deployments and their microservices
-
-### Resolution Notes and Screenshots:
-
-Bellow you will find the architecture diagram with two load balancers as example of two services exposed from EKS:
-
-![13-architecture-diagram](screenshots/13-deployment-roulette-architecture.png)
-
-## Project Clean Up
-
-In an effort to reduce your cost footprint in the AWS environment. Feel free to tear down your aws environment when not
-in use. Clean up the environment with the `nuke_everything.sh` script or run the steps individually
-
-```
-cd starter/infra
-terraform state rm kubernetes_namespace.udacity && terraform state rm kubernetes_service.blue
-eksctl delete iamserviceaccount --name cluster-autoscaler --namespace kube-system --cluster udacity-cluster --region us-east-2
-kubectl delete all --all -n udacity
-terraform destroy
-```
-
-## License
-
-[License](../LICENSE.md)
+Made with ❤️ and 🧉 by [Cristian Cevasco](https://github.com/circobit)
